@@ -31,8 +31,12 @@ namespace LandPerf
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddNodeServices(options => {
+                options.LaunchWithDebugging = true;
+                options.DebuggingPort = 9229;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

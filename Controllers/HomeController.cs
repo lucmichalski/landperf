@@ -6,14 +6,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LandPerf.Models;
 
+using Microsoft.Extensions.Configuration;
+
+
 namespace LandPerf.Controllers
 {
   public class HomeController : Controller
   {
+    public HomeController(IConfiguration Configuration)
+    {
+      configuration = Configuration; // How do I avoid having to set use this constructor for the Configuration objects
+    }
+
+    public IConfiguration configuration { get; }
+
     public IActionResult Index()
     {
+    
       return View();
     }
+
+
 
     public IActionResult Privacy()
     {
