@@ -29,14 +29,17 @@ namespace LandPerf.api
     [HttpGet]
     public async Task<Report> Get(int id)
     {
-
-      var lhr = await runLightHouse(_nodeServices);
+      // Insert all urls into table. Four brands with at least 3 routes a piece plus dev sites. Save sql for all of this somehow.
+      // Need to loop through urls, run lighthouse, and set data one by one.
+      IEnumerable<Url> urls = await Lighthouse.GetUrls(_config);
+      Url url = urls.FirstOrDefault();
+      dynamic lhr = await runLightHouse(_nodeServices, url.Name);
       string fetchTime = lhr.fetchTime;
       double performance = lhr.categories.performance.score;
 
       Report report = new Report
       {
-        SiteId = 1,
+        UrlId = url.Id,
         FetchTime = fetchTime,
         Performance = performance
       };
@@ -44,9 +47,9 @@ namespace LandPerf.api
       Lighthouse.SetReport(_config, report);
       return report;
     }
-    public async Task<dynamic> runLightHouse([FromServices] INodeServices nodeServices)
+    public async Task<dynamic> runLightHouse([FromServices] INodeServices nodeServices, string url)
     {
-      dynamic lhr = await nodeServices.InvokeAsync<dynamic>("./lighthouse", "https://www.landsofamerica.com");
+      dynamic lhr = await nodeServices.InvokeAsync<dynamic>("./lighthouse", url);
       return lhr;
     }
   }
