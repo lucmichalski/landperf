@@ -27,9 +27,9 @@ namespace LandPerf.api
 
 
     [HttpGet]
-    public async Task<IEnumerable<Url>> Get(int id)
+    public async Task<IEnumerable<Url>> Get()
     {
-      IEnumerable<Url> urls = await Lighthouse.GetUrls(_config);
+      IEnumerable<Url> urls = await LighthouseRepository.GetUrls(_config);
 
       foreach (Url url in urls)
       {
@@ -38,6 +38,16 @@ namespace LandPerf.api
       return urls;
     }
 
+    [HttpGet("{id}")]
+    public async Task<IEnumerable<Report>> Get(int id)
+    {
+      var reports = await LighthouseRepository.GetReportsByUrlId(_config, id);
+      return reports;
+    }
+
+
+
+    //Where do these non API methods go?
     public async Task runLightHouseAndSetReport(Url url)
     {
       dynamic lhr = await runLightHouse(_nodeServices, url.Name);
@@ -51,7 +61,7 @@ namespace LandPerf.api
         Performance = performance
       };
 
-      Lighthouse.SetReport(_config, report);
+      LighthouseRepository.SetReport(_config, report);
     }
     public async Task<dynamic> runLightHouse([FromServices] INodeServices nodeServices, string url)
     {
