@@ -27,12 +27,19 @@ namespace LandPerf.api
 
 
     [HttpGet]
-    public async Task<Report> Get(int id)
+    public async Task<IEnumerable<Url>> Get(int id)
     {
-      // Insert all urls into table. Four brands with at least 3 routes a piece plus dev sites. Save sql for all of this somehow.
-      // Need to loop through urls, run lighthouse, and set data one by one.
       IEnumerable<Url> urls = await Lighthouse.GetUrls(_config);
-      Url url = urls.FirstOrDefault();
+
+      foreach (Url url in urls)
+      {
+        await runLightHouseAndSetReport(url);
+      }
+      return urls;
+    }
+
+    public async Task runLightHouseAndSetReport(Url url)
+    {
       dynamic lhr = await runLightHouse(_nodeServices, url.Name);
       string fetchTime = lhr.fetchTime;
       double performance = lhr.categories.performance.score;
@@ -45,7 +52,6 @@ namespace LandPerf.api
       };
 
       Lighthouse.SetReport(_config, report);
-      return report;
     }
     public async Task<dynamic> runLightHouse([FromServices] INodeServices nodeServices, string url)
     {

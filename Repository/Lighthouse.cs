@@ -18,7 +18,7 @@ namespace LandPerf.Repository
       using (var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection")))
       {
         connection.Open();
-        string insertReport = "INSERT INTO Report (url_id, fetchTime, performance) Values (@UrlId, @FetchTime, @Performance);";
+        string insertReport = "INSERT INTO Reports (urlId, fetchTime, performance) Values (@UrlId, @FetchTime, @Performance);";
         connection.Execute(insertReport, new Report { UrlId = report.UrlId, FetchTime = report.FetchTime, Performance = report.Performance });
       }
     }
@@ -28,7 +28,7 @@ namespace LandPerf.Repository
       using (var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection")))
       {
         connection.Open();
-        var urlsSql = "SELECT * FROM Url";
+        var urlsSql = "SELECT * FROM Urls";
         var urls = await connection.QueryAsync<Url>(urlsSql);
         return urls;
       }
