@@ -10,16 +10,22 @@ using Dapper;
 
 namespace LandPerf.Repository
 {
+
+
   public class LighthouseRepository
   {
 
-    public static void SetReport(IConfiguration configuration, Report report)
+    public static async Task<int> SetReport(IConfiguration configuration, Report report)
     {
       using (var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection")))
       {
         connection.Open();
-        string insertReport = "INSERT INTO Reports (urlId, fetchTime, performance) Values (@UrlId, @FetchTime, @Performance);";
-        connection.Execute(insertReport, new Report { UrlId = report.UrlId, FetchTime = report.FetchTime, Performance = report.Performance });
+        string insertReportandGetPrimaryKeySql = "INSERT INTO Reports (urlId, fetchTime, performance) VALUES (@UrlId, @FetchTime, @Performance); SELECT CAST(SCOPE_IDENTITY() as int) as PrimaryKeyId";
+        var reportPrimaryKey = await connection.QueryFirstAsync<PKey>(insertReportandGetPrimaryKeySql, new Report { UrlId = report.UrlId, FetchTime = report.FetchTime });
+
+        return reportPrimaryKey.PrimaryKeyId;
+
+
       }
     }
 
@@ -31,6 +37,17 @@ namespace LandPerf.Repository
         var urlsSql = "SELECT * FROM Urls";
         var urls = await connection.QueryAsync<Url>(urlsSql);
         return urls;
+      }
+    }
+
+    public static async Task SetPerfMetric(IConfiguration configuration, int reportId, PerfMetric perfMetric)
+    {
+      using (var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection")))
+      {
+        connection.Open();
+        perfMetric.ReportId = reportId;
+        string insertFCPSql = "INSERT INTO PerfMetric(reportId, score, numericValue, displayValue, title) VALUES (@ReportId, @Score, @NumericValue, @DisplayValue, @Title)";
+        await connection.ExecuteAsync(insertFCPSql, perfMetric);
       }
     }
 

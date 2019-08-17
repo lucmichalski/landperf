@@ -51,17 +51,41 @@ namespace LandPerf.api
     public async Task runLightHouseAndSetReport(Url url)
     {
       dynamic lhr = await runLightHouse(_nodeServices, url.Name);
-      string fetchTime = lhr.fetchTime;
+      string lhrFetchTime = lhr.fetchTime;
       double performance = lhr.categories.performance.score;
+      var lhrFCP = lhr.audits["first-contentful-paint"];
+      var lhrFMP = lhr.audits["first-meaningful-paint"];
+      var lhrSI = lhr.audits["speed-index"];
+      var lhrEIL = lhr.audits["estimated-input-latency"];
+      var lhrMPF = lhr.audits["max-potential-fid"];
+      var lhrTBT = lhr.audits["total-blocking-time"];
+      var lhrTTFB = lhr.audits["time-to-first-byte"];
+      var lhrI = lhr.audits["interactive"];
+      var lhrFCI = lhr.audits["first-cpu-idle"];
+      IEnumerable<dynamic> metrics = new[] { lhrFCP, lhrFMP, lhrSI, lhrEIL, lhrMPF, lhrTBT, lhrTTFB, lhrI, lhrFCI };
+
+      IEnumerable<PerfMetric> perfMetrics = metrics.Select(metric => new PerfMetric
+      {
+        DisplayValue = metric.displayValue,
+        NumericValue = metric.numericValue,
+        Score = metric.score,
+        Title = metric.title
+      });
+
 
       Report report = new Report
       {
         UrlId = url.Id,
-        FetchTime = fetchTime,
+        FetchTime = lhrFetchTime,
         Performance = performance
       };
 
-      LighthouseRepository.SetReport(_config, report);
+      int reportId = await LighthouseRepository.SetReport(_config, report);
+      foreach (PerfMetric perfMetric in perfMetrics)
+      {
+        await LighthouseRepository.SetPerfMetric(_config, reportId, perfMetric);
+      }
+
     }
     public async Task<dynamic> runLightHouse([FromServices] INodeServices nodeServices, string url)
     {
