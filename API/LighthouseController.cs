@@ -57,5 +57,14 @@ namespace LandPerf.api
       return perfMetrics;
     }
 
+
+    [HttpGet("urls")]
+    public async Task<IEnumerable<Url>> GetUrls()
+    {
+      IEnumerable<Url> urls = await LighthouseRepository.GetUrls(_config);
+      return urls;
+    }
+
+
   }
 }
