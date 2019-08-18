@@ -59,5 +59,15 @@ namespace LandPerf.Repository
         return reports;
       }
     }
+    public static async Task<IEnumerable<PerfMetric>> GetPerfMetricsByReportId(IConfiguration configuration, int reportId)
+    {
+      using (var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection")))
+      {
+        connection.Open();
+        var perfMetricsSql = "SELECT * FROM PerfMetric WHERE reportId = @reportId";
+        var perfMetrics = await connection.QueryAsync<PerfMetric>(perfMetricsSql, new { reportId = reportId });
+        return perfMetrics;
+      }
+    }
   }
 }

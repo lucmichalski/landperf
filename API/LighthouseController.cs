@@ -43,11 +43,18 @@ namespace LandPerf.api
       return urls;
     }
 
-    [HttpGet("{id}")]
-    public async Task<IEnumerable<Report>> Get(int id)
+    [HttpGet("reports/{id}")]
+    public async Task<IEnumerable<Report>> GetReports(int id)
     {
       var reports = await LighthouseRepository.GetReportsByUrlId(_config, id);
       return reports;
+    }
+
+    [HttpGet("perfmetrics/{reportId}")]
+    public async Task<IEnumerable<PerfMetric>> GetPerfMetricsByReportId(int reportId)
+    {
+      var perfMetrics = await LighthouseRepository.GetPerfMetricsByReportId(_config, reportId);
+      return perfMetrics;
     }
 
   }
