@@ -10,8 +10,6 @@ using Dapper;
 
 namespace LandPerf.Repository
 {
-
-
   public class LighthouseRepository
   {
 
@@ -56,7 +54,7 @@ namespace LandPerf.Repository
       {
         connection.Open();
         //Check if urlId exists?
-        var reportsSql = "SELECT * FROM Reports WHERE urlId = @urlId";
+        var reportsSql = "SELECT * FROM Report WHERE urlId = @urlId";
         var reports = await connection.QueryAsync<Report>(reportsSql, new { urlId = urlId });
         return reports;
       }
