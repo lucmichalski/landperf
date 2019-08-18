@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import LineChart from './LineChart';
+import AreaChart from './AreaChart';
 import PerfMetric from './PerfMetric';
 import Select from './Select';
 
@@ -8,14 +8,11 @@ class App extends Component<any, any> {
 	state = { reports: [], reportPerfMetrics: [], urls: [] };
 
 	async componentDidMount() {
-		const reportsUrl = `${process.env.REACT_APP_API_ROOT}api/lighthouse/reports/1`;
-		const reportsResponse = await fetch(reportsUrl);
-		const reports = await reportsResponse.json();
 		const urlsUrl = `${process.env.REACT_APP_API_ROOT}api/lighthouse/urls`;
 		const urlsResponse = await fetch(urlsUrl);
 		const urls = await urlsResponse.json();
 
-		this.setState({ reports, urls });
+		this.setState({ urls });
 	}
 
 	handleReportClick = async (data: any, index: any) => {
@@ -40,10 +37,11 @@ class App extends Component<any, any> {
 		const { reports, reportPerfMetrics, urls } = this.state;
 		return (
 			<div className="App">
-				<div className="chart-container">
-					<LineChart handleClick={this.handleReportClick} reports={reports} />
-				</div>
+				<header className="Header">LandPerf</header>
 				<Select urls={urls} handleClick={this.handleSelectClick} />
+				<div className="chart-container">
+					<AreaChart handleClick={this.handleReportClick} reports={reports} />
+				</div>
 				<div className="perf-metrics">
 					{reportPerfMetrics &&
 						reportPerfMetrics.length > 0 &&

@@ -13,14 +13,13 @@ function SimpleSelect(props: any) {
 	function handleChange(event: any) {
 		const url = event.target.name;
 		const urlId = event.target.value;
-		console.log(event.target.name, event.target.value);
+
 		setValues(oldValues => ({
 			...oldValues,
 			[url]: urlId
 		}));
 		props.handleClick(urlId);
 	}
-	console.log(values);
 
 	return (
 		<FormControl className={'formControl'}>

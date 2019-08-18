@@ -87,7 +87,7 @@ namespace LandPerf.BLL
         Title = "Overall Performance"
       }};
 
-      IEnumerable<PerfMetric> perfMetrics = basePerfMetrics.Concat(performanceMetric);
+      IEnumerable<PerfMetric> perfMetrics = performanceMetric.Concat(basePerfMetrics);
       return perfMetrics;
     }
   }
