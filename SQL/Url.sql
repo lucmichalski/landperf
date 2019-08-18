@@ -1,10 +1,10 @@
 -- Create a new table called '[Urls]' in schema '[dbo]'
 -- Drop the table if it already exists
-IF OBJECT_ID('[dbo].[Urls]', 'U') IS NOT NULL
-DROP TABLE [dbo].[Urls]
+IF OBJECT_ID('[dbo].[Url]', 'U') IS NOT NULL
+DROP TABLE [dbo].[Url]
 GO
 -- Create the table in the specified schema
-CREATE TABLE [dbo].[Urls]
+CREATE TABLE [dbo].[Url]
 (
     [id] INT NOT NULL IDENTITY PRIMARY KEY, -- Primary Key column
     [siteId] INT NOT NULL,
@@ -15,8 +15,8 @@ GO
 
 
 
--- Insert rows into table 'Urls' in schema '[dbo]'
-INSERT INTO [dbo].[Urls]
+-- Insert rows into table 'Url' in schema '[dbo]'
+INSERT INTO [dbo].[Url]
 ( -- Columns to insert data into
  [siteId], [name]
 )
@@ -33,4 +33,6 @@ GO
 
 
 -- Select rows from a Table or View '[Urls]' in schema '[dbo]'
-SELECT * FROM [dbo].[Urls]
+SELECT * FROM [dbo].[Url]
+
+

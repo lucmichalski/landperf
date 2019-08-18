@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,35 +52,8 @@ namespace LandPerf.api
     public async Task runLightHouseAndSetReport(Url url)
     {
       dynamic lhr = await runLightHouse(_nodeServices, url.Name);
-      string lhrFetchTime = lhr.fetchTime;
-      double performance = lhr.categories.performance.score;
-      var lhrFCP = lhr.audits["first-contentful-paint"];
-      var lhrFMP = lhr.audits["first-meaningful-paint"];
-      var lhrSI = lhr.audits["speed-index"];
-      var lhrEIL = lhr.audits["estimated-input-latency"];
-      var lhrMPF = lhr.audits["max-potential-fid"];
-      var lhrTBT = lhr.audits["total-blocking-time"];
-      var lhrTTFB = lhr.audits["time-to-first-byte"];
-      var lhrI = lhr.audits["interactive"];
-      var lhrFCI = lhr.audits["first-cpu-idle"];
-      IEnumerable<dynamic> metrics = new[] { lhrFCP, lhrFMP, lhrSI, lhrEIL, lhrMPF, lhrTBT, lhrTTFB, lhrI, lhrFCI };
-
-      IEnumerable<PerfMetric> perfMetrics = metrics.Select(metric => new PerfMetric
-      {
-        DisplayValue = metric.displayValue,
-        NumericValue = metric.numericValue,
-        Score = metric.score,
-        Title = metric.title
-      });
-
-
-      Report report = new Report
-      {
-        UrlId = url.Id,
-        FetchTime = lhrFetchTime,
-        Performance = performance
-      };
-
+      Report report = createReport(lhr, url);
+      IEnumerable<PerfMetric> perfMetrics = createPerfMetrics(lhr);
       int reportId = await LighthouseRepository.SetReport(_config, report);
       foreach (PerfMetric perfMetric in perfMetrics)
       {
@@ -91,6 +65,51 @@ namespace LandPerf.api
     {
       dynamic lhr = await nodeServices.InvokeAsync<dynamic>("./lighthouse", url);
       return lhr;
+    }
+
+    private Report createReport(dynamic lhr, Url url)
+    {
+      string lhrFetchTime = lhr.fetchTime;
+      int performance = lhr.categories.performance.score * 100;
+      Report report = new Report
+      {
+        UrlId = url.Id,
+        FetchTime = lhrFetchTime,
+        Performance = performance
+      };
+      return report;
+    }
+    private IEnumerable<PerfMetric> createPerfMetrics(dynamic lhr)
+    {
+      int performance = lhr.categories.performance.score * 100;
+      var lhrFCP = lhr.audits["first-contentful-paint"];
+      var lhrFMP = lhr.audits["first-meaningful-paint"];
+      var lhrSI = lhr.audits["speed-index"];
+      var lhrEIL = lhr.audits["estimated-input-latency"];
+      var lhrMPF = lhr.audits["max-potential-fid"];
+      var lhrTBT = lhr.audits["total-blocking-time"];
+      var lhrTTFB = lhr.audits["time-to-first-byte"];
+      var lhrI = lhr.audits["interactive"];
+      var lhrFCI = lhr.audits["first-cpu-idle"];
+      IEnumerable<dynamic> metrics = new[] { lhrFCP, lhrFMP, lhrSI, lhrEIL, lhrMPF, lhrTBT, lhrTTFB, lhrI, lhrFCI };
+
+      IEnumerable<PerfMetric> basePerfMetrics = metrics.Select(metric => new PerfMetric
+      {
+        DisplayValue = metric.displayValue,
+        NumericValue = metric.numericValue,
+        Score = metric.score * 100,
+        Title = metric.title
+      });
+
+      IEnumerable<PerfMetric> performanceMetric = new[] {new PerfMetric {
+        DisplayValue = performance.ToString(),
+        NumericValue = performance,
+        Score = performance,
+        Title = "Overall Performance"
+      }};
+
+      IEnumerable<PerfMetric> perfMetrics = basePerfMetrics.Concat(performanceMetric);
+      return perfMetrics;
     }
   }
 }

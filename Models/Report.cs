@@ -5,7 +5,8 @@ namespace LandPerf.Models
   {
     public int UrlId { get; set; }
     public string FetchTime { get; set; }
-    public double Performance { get; set; }
+    public int Performance { get; set; }
+
   }
 
 }

@@ -20,12 +20,10 @@ namespace LandPerf.Repository
       using (var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection")))
       {
         connection.Open();
-        string insertReportandGetPrimaryKeySql = "INSERT INTO Reports (urlId, fetchTime, performance) VALUES (@UrlId, @FetchTime, @Performance); SELECT CAST(SCOPE_IDENTITY() as int) as PrimaryKeyId";
-        var reportPrimaryKey = await connection.QueryFirstAsync<PKey>(insertReportandGetPrimaryKeySql, new Report { UrlId = report.UrlId, FetchTime = report.FetchTime });
+        string insertReportandGetPrimaryKeySql = "INSERT INTO Report (urlId, fetchTime, performance) VALUES (@UrlId, @FetchTime, @Performance); SELECT SCOPE_IDENTITY() as PrimaryKeyId";
+        var reportPrimaryKey = await connection.QueryFirstAsync<PKey>(insertReportandGetPrimaryKeySql, new Report { UrlId = report.UrlId, FetchTime = report.FetchTime, Performance = report.Performance });
 
         return reportPrimaryKey.PrimaryKeyId;
-
-
       }
     }
 
@@ -34,7 +32,7 @@ namespace LandPerf.Repository
       using (var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection")))
       {
         connection.Open();
-        var urlsSql = "SELECT * FROM Urls";
+        var urlsSql = "SELECT * FROM Url";
         var urls = await connection.QueryAsync<Url>(urlsSql);
         return urls;
       }
