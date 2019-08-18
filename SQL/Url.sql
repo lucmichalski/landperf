@@ -26,6 +26,12 @@ VALUES
 ),
 ( -- First row: values for the columns in the list above
  2, 'https://www.landwatch.com'
+),
+( -- First row: values for the columns in the list above
+ 3, 'https://www.landandfarm.com'
+),
+( -- First row: values for the columns in the list above
+ 4, 'https://www.land.com'
 )
 -- Add more rows here
 GO

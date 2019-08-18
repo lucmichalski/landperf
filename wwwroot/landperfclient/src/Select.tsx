@@ -1,25 +1,11 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
-const useStyles = makeStyles(theme => ({
-	formControl: {
-		margin: theme.spacing(1),
-		width: 500
-	},
-	label: {
-		color: '#fff'
-	},
-	select: {
-		color: '#fff'
-	}
-}));
+import './Select.css';
 
 function SimpleSelect(props: any) {
-	const classes = useStyles();
 	const [values, setValues] = React.useState({
 		url: ''
 	});
@@ -37,12 +23,12 @@ function SimpleSelect(props: any) {
 	console.log(values);
 
 	return (
-		<FormControl className={classes.formControl}>
-			<InputLabel className={classes.label} htmlFor="url">
+		<FormControl className={'formControl'}>
+			<InputLabel className={'label'} htmlFor="url">
 				Url
 			</InputLabel>
 			<Select
-				className={classes.select}
+				className={'select'}
 				value={values.url}
 				onChange={handleChange}
 				inputProps={{

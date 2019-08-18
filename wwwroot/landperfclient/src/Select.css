@@ -1,0 +1,19 @@
+.MuiFormControl-root .MuiInput-underline:before {
+	border-bottom: 1px solid #666;
+}
+.MuiFormControl-root .MuiSelect-icon {
+	color: #666;
+}
+.formControl {
+	min-width: 320px;
+	width: 25vw;
+}
+.MuiFormControl-root .label {
+	color: #fff;
+}
+.MuiFormControl-root .Mui-focused {
+	color: #fff !important;
+}
+.MuiFormControl-root .select {
+	color: #fff;
+}

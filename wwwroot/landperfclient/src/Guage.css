@@ -1,0 +1,38 @@
+.progress-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.progress-bar {
+	background-color: gray;
+	border-radius: 1.25em;
+	width: 50%;
+	height: 4px;
+	display: inline-block;
+	position: relative;
+	margin-bottom: 1em;
+}
+.progress-value {
+	left: 0;
+	position: absolute;
+	background-color: #303f9f;
+	transition: 0.3s all linear;
+	border-radius: 1.25em;
+	height: 100%;
+	display: inline-block;
+	animation: progress 1.5s ease-in-out forwards;
+	-webkit-animation: progress 1.5s ease-in-out forwards;
+}
+
+/* animation */
+@keyframes progress {
+	0% {
+		width: 0;
+	}
+}
+@-webkit-keyframes progress {
+	0% {
+		width: 0;
+	}
+}
