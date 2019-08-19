@@ -1,11 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './App.css';
 import AreaChart from './AreaChart';
 import PerfMetric from './PerfMetric';
 import Select from './Select';
 
-class App extends Component<any, any> {
-	state = { reports: [], reportPerfMetrics: [], urls: [] };
+interface State {
+	reports: any[];
+	reportPerfMetrics: any[];
+	urls: any[];
+	reportFetchTime: string;
+}
+
+class App extends Component<any, State> {
+	state = { reports: [], reportPerfMetrics: [], urls: [], reportFetchTime: '' };
 
 	async componentDidMount() {
 		const urlsUrl = `${process.env.REACT_APP_API_ROOT}api/lighthouse/urls`;
@@ -16,13 +23,13 @@ class App extends Component<any, any> {
 	}
 
 	handleReportClick = async (data: any, index: any) => {
-		console.log(data.payload.id);
+		const reportFetchTime = data.payload.fetchTime;
 		const reportId = data.payload.id;
-		const url = `${process.env.REACT_APP_API_ROOT}api/lighthouse/perfmetrics/${reportId}`;
-		const perfMetricsResponse = await fetch(url);
+		const perfMetricsUrl = `${process.env.REACT_APP_API_ROOT}api/lighthouse/perfmetrics/${reportId}`;
+		const perfMetricsResponse = await fetch(perfMetricsUrl);
 		const reportPerfMetrics = await perfMetricsResponse.json();
-		console.log(reportPerfMetrics);
-		this.setState({ reportPerfMetrics });
+
+		this.setState({ reportPerfMetrics, reportFetchTime });
 	};
 
 	handleSelectClick = async (urlId: number) => {
@@ -34,26 +41,38 @@ class App extends Component<any, any> {
 	};
 
 	render() {
-		const { reports, reportPerfMetrics, urls } = this.state;
+		const { reports, reportPerfMetrics, urls, reportFetchTime } = this.state;
 		return (
 			<div className="App">
 				<header className="Header">LandPerf</header>
 				<Select urls={urls} handleClick={this.handleSelectClick} />
-				<div className="chart-container">
-					<AreaChart handleClick={this.handleReportClick} reports={reports} />
-				</div>
-				<div className="perf-metrics">
-					{reportPerfMetrics &&
-						reportPerfMetrics.length > 0 &&
-						reportPerfMetrics.map((perfMetric: any) => (
-							<PerfMetric
-								key={perfMetric.title}
-								title={perfMetric.title}
-								score={perfMetric.score}
-								displayValue={perfMetric.displayValue}
-							/>
-						))}
-				</div>
+				{reports && reports.length > 0 && (
+					<div className="chart-container">
+						<AreaChart handleClick={this.handleReportClick} reports={reports} />
+					</div>
+				)}
+
+				{reportPerfMetrics && reportPerfMetrics.length > 0 && (
+					<Fragment>
+						{reportFetchTime && <h3 className="report-timestamp-header">Report conducted on {reportFetchTime}</h3>}
+						<div className="perf-metrics">
+							{reportPerfMetrics.map((perfMetric: any) => (
+								<PerfMetric
+									key={perfMetric.title}
+									title={perfMetric.title}
+									score={perfMetric.score}
+									displayValue={perfMetric.displayValue}
+								/>
+							))}
+							<a
+								className={'lighthouse-link'}
+								href="https://docs.google.com/spreadsheets/d/1Cxzhy5ecqJCucdf1M0iOzM8mIxNc7mmx107o5nj38Eo/edit#gid=0"
+							>
+								Lighthouse Scoring Weights
+							</a>
+						</div>
+					</Fragment>
+				)}
 			</div>
 		);
 	}

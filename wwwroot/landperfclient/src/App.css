@@ -23,10 +23,6 @@
 	color: white;
 }
 
-.App-link {
-	color: #61dafb;
-}
-
 .perf-metrics {
 	width: 100%;
 	margin-top: 100px;
@@ -36,4 +32,13 @@
 	justify-content: center;
 	flex-wrap: wrap;
 	color: white;
+}
+
+.report-timestamp-header {
+	color: white;
+	opacity: 0.7;
+}
+
+.lighthouse-link {
+	color: #666;
 }
