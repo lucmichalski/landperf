@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.NodeServices;
 
 namespace LandPerf.BLL
 {
-  [Route("api/[controller]")]
   public class LighthouseBLL
   {
 

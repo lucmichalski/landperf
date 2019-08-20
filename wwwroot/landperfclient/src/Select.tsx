@@ -3,9 +3,14 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import { Url } from './interfaces';
 import './Select.css';
 
-function SimpleSelect(props: any) {
+interface Props {
+	urls: Url[];
+	handleClick: (urlId: number) => Promise<void>;
+}
+function SimpleSelect(props: Props) {
 	const [values, setValues] = React.useState({
 		url: ''
 	});

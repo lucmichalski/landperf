@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.NodeServices;
 
 
 
-namespace LandPerf.api
+namespace LandPerf.API
 {
   [Route("api/[controller]")]
   public class LighthouseController : Controller
@@ -21,24 +21,24 @@ namespace LandPerf.api
 
     private IConfiguration _config;
     private INodeServices _nodeServices;
-    private LighthouseBLL _BLL;
+    private LighthouseBLL _LighthouseBLL;
 
     public LighthouseController(IConfiguration Configuration, INodeServices NodeServices)
     {
       _config = Configuration;
       _nodeServices = NodeServices;
-      _BLL = new LighthouseBLL(Configuration, NodeServices);
+      _LighthouseBLL = new LighthouseBLL(Configuration, NodeServices);
     }
 
 
-    [HttpGet]
-    public async Task<IEnumerable<Url>> Get()
+    [HttpGet("reports/set")]
+    public async Task<IEnumerable<Url>> SetLighthouseReports()
     {
       IEnumerable<Url> urls = await LighthouseRepository.GetUrls(_config);
 
       foreach (Url url in urls)
       {
-        await _BLL.runLightHouseAndSetReport(url);
+        await _LighthouseBLL.runLightHouseAndSetReport(url);
       }
       return urls;
     }

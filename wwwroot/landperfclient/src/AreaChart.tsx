@@ -1,4 +1,5 @@
 import React from 'react';
+import { Report } from './interfaces';
 //Babel plugin to not import the whole line chart package.
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './AreaChart.css';
@@ -17,7 +18,12 @@ const CustomTooltip = (props: any) => {
 	return null;
 };
 
-export default function CustomAreaChart(props: any) {
+interface Props {
+	reports: Report[];
+	handleClick: (data: any, index: any) => Promise<void>;
+}
+
+export default function CustomAreaChart(props: Props) {
 	const { reports, handleClick } = props;
 	//Only set ticks on x axis if month changes.
 	let month = -1;

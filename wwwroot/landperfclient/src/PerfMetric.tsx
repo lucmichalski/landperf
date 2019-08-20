@@ -1,7 +1,9 @@
 import React from 'react';
 import Guage from './Guage';
+import { PerfMetric as IPerfMetric } from './interfaces';
 import './PerfMetric.css';
-const PerfMetric = (props: any) => {
+
+const PerfMetric = (props: IPerfMetric) => {
 	return (
 		<div className="perf-metric">
 			<Guage value={props.score} />

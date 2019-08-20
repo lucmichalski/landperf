@@ -3,21 +3,22 @@ import './App.css';
 import AreaChart from './AreaChart';
 import PerfMetric from './PerfMetric';
 import Select from './Select';
+import { Report, PerfMetric as IPerfMetric, Url } from './interfaces';
 
 interface State {
-	reports: any[];
-	reportPerfMetrics: any[];
-	urls: any[];
+	reports: Report[];
+	perfMetrics: IPerfMetric[];
+	urls: Url[];
 	reportFetchTime: string;
 }
 
 class App extends Component<any, State> {
-	state = { reports: [], reportPerfMetrics: [], urls: [], reportFetchTime: '' };
+	state = { reports: [], perfMetrics: [], urls: [], reportFetchTime: '' };
 
 	async componentDidMount() {
 		const urlsUrl = `${process.env.REACT_APP_API_ROOT}api/lighthouse/urls`;
 		const urlsResponse = await fetch(urlsUrl);
-		const urls = await urlsResponse.json();
+		const urls: Url[] = await urlsResponse.json();
 
 		this.setState({ urls });
 	}
@@ -27,21 +28,21 @@ class App extends Component<any, State> {
 		const reportId = data.payload.id;
 		const perfMetricsUrl = `${process.env.REACT_APP_API_ROOT}api/lighthouse/perfmetrics/${reportId}`;
 		const perfMetricsResponse = await fetch(perfMetricsUrl);
-		const reportPerfMetrics = await perfMetricsResponse.json();
+		const perfMetrics: IPerfMetric[] = await perfMetricsResponse.json();
 
-		this.setState({ reportPerfMetrics, reportFetchTime });
+		this.setState({ perfMetrics, reportFetchTime });
 	};
 
 	handleSelectClick = async (urlId: number) => {
 		const url = `${process.env.REACT_APP_API_ROOT}api/lighthouse/reports/${urlId}`;
 		const reportsResponse = await fetch(url);
-		const reports = await reportsResponse.json();
+		const reports: Report[] = await reportsResponse.json();
 
-		this.setState({ reports, reportPerfMetrics: [] });
+		this.setState({ reports, perfMetrics: [] });
 	};
 
 	render() {
-		const { reports, reportPerfMetrics, urls, reportFetchTime } = this.state;
+		const { reports, perfMetrics, urls, reportFetchTime } = this.state;
 		return (
 			<div className="App">
 				<header className="Header">LandPerf</header>
@@ -52,11 +53,11 @@ class App extends Component<any, State> {
 					</div>
 				)}
 
-				{reportPerfMetrics && reportPerfMetrics.length > 0 && (
+				{perfMetrics && perfMetrics.length > 0 && (
 					<Fragment>
 						{reportFetchTime && <h3 className="report-timestamp-header">Report conducted on {reportFetchTime}</h3>}
 						<div className="perf-metrics">
-							{reportPerfMetrics.map((perfMetric: any) => (
+							{perfMetrics.map((perfMetric: IPerfMetric) => (
 								<PerfMetric
 									key={perfMetric.title}
 									title={perfMetric.title}

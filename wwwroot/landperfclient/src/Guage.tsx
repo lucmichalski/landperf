@@ -1,5 +1,4 @@
 import React from 'react';
-
 import './Guage.css';
 
 function ScoreGuage(props: any) {
