@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import './App.css';
 import AreaChart from './AreaChart';
-import PerfMetric from './PerfMetric';
+import PerfMetricCard from './PerfMetricCard';
 import Select from './Select';
-import { Report, PerfMetric as IPerfMetric, Url } from './interfaces';
+import { Report, PerfMetric, Url } from './interfaces';
 
 interface State {
 	reports: Report[];
-	perfMetrics: IPerfMetric[];
+	perfMetrics: PerfMetric[];
 	urls: Url[];
 	reportFetchTime: string;
 }
@@ -28,7 +28,7 @@ class App extends Component<any, State> {
 		const reportId = data.payload.id;
 		const perfMetricsUrl = `${process.env.REACT_APP_API_ROOT}api/lighthouse/perfmetrics/${reportId}`;
 		const perfMetricsResponse = await fetch(perfMetricsUrl);
-		const perfMetrics: IPerfMetric[] = await perfMetricsResponse.json();
+		const perfMetrics: PerfMetric[] = await perfMetricsResponse.json();
 
 		this.setState({ perfMetrics, reportFetchTime });
 	};
@@ -57,9 +57,9 @@ class App extends Component<any, State> {
 					<Fragment>
 						{reportFetchTime && <h3 className="report-timestamp-header">Report conducted on {reportFetchTime}</h3>}
 						<div className="perf-metrics">
-							{perfMetrics.map((perfMetric: IPerfMetric) => (
-								<PerfMetric
-									key={perfMetric.title}
+							{perfMetrics.map((perfMetric: PerfMetric) => (
+								<PerfMetricCard
+									key={`${perfMetric.title}${perfMetric.displayValue}`}
 									title={perfMetric.title}
 									score={perfMetric.score}
 									displayValue={perfMetric.displayValue}
