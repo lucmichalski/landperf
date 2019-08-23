@@ -8,7 +8,7 @@ CREATE TABLE [dbo].[Url]
 (
     [id] INT NOT NULL IDENTITY PRIMARY KEY, -- Primary Key column
     [siteId] INT NOT NULL,
-    [name] NVARCHAR(50) NOT NULL,
+    [name] NVARCHAR(max) NOT NULL,
    
 );
 GO

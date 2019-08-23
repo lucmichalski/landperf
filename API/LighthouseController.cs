@@ -32,7 +32,7 @@ namespace LandPerf.API
 
 
     [HttpGet("reports/set")]
-    public async Task<IEnumerable<Url>> SetLighthouseReports()
+    public async Task<string> SetLighthouseReports()
     {
       IEnumerable<Url> urls = await LighthouseRepository.GetUrls(_config);
 
@@ -40,7 +40,7 @@ namespace LandPerf.API
       {
         await _LighthouseBLL.runLightHouseAndSetReport(url);
       }
-      return urls;
+      return "Lighthouse has been run for the Urls retrieved from the database";
     }
 
     [HttpGet("reports/{id}")]

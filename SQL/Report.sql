@@ -8,7 +8,7 @@ CREATE TABLE [dbo].[Report]
 (
     [id] INT NOT NULL IDENTITY PRIMARY KEY, -- Primary Key column
     [urlId] INT NOT NULL,
-    [fetchTime] NVARCHAR(50) NOT NULL,
+    [fetchTime] NVARCHAR(max) NOT NULL,
     [performance] INT NOT NULL,
     -- Specify more columns here
 );

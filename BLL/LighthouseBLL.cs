@@ -47,12 +47,13 @@ namespace LandPerf.BLL
 
     private Report createReport(dynamic lhr, Url url)
     {
-      string lhrFetchTime = lhr.fetchTime;
+      DateTime lhrFetchTime = lhr.fetchTime;
       int performance = lhr.categories.performance.score * 100;
+      TimeZoneInfo cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
       Report report = new Report
       {
         UrlId = url.Id,
-        FetchTime = lhrFetchTime,
+        FetchTime = TimeZoneInfo.ConvertTimeFromUtc(lhrFetchTime, cstZone).ToString(),
         Performance = performance
       };
       return report;

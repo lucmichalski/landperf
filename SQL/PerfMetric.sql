@@ -9,9 +9,9 @@ CREATE TABLE [dbo].[PerfMetric]
    [id] INT NOT NULL IDENTITY PRIMARY KEY, -- Primary Key column
    [reportId] INT NOT NULL,
    [score] INT NOT NULL,
-   [displayValue] NVARCHAR(50) NOT NUll,
+   [displayValue] NVARCHAR(max) NOT NUll,
    [numericValue] NUMERIC(10,3) NOT NULL,
-   [title] NVARCHAR(50) NOT NUll,
+   [title] NVARCHAR(max) NOT NUll,
    
     -- Specify more columns here
 );
